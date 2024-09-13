@@ -107,4 +107,10 @@ tnc 193.124.125.78 -port 80
 tnc 193.233.254.21 -port 80
 
 # Test #13 - Drop Ransomnote
-Invoke-WebRequest -Uri "https://github.com/skandler/ransomhub-simulation/blob/cab180b4401bb360195d74b03ea8da277dcd23f5/How%20To%20Restore%20Your%20Files.txt" -OutFile "%USERPROFILE%/Desktop\How To Restore Your Files.txt"
+$users = Get-WmiObject -Class Win32_UserProfile | Where-Object { $_.Special -eq $false }
+$url = "https://raw.githubusercontent.com/skandler/ransomhub-simulation/main/How%20To%20Restore%20Your%20Files.txt"
+
+foreach ($user in $users) {
+    $desktopPath = Join-Path $user.LocalPath "Desktop\How To Restore Your Files.txt"
+    Invoke-WebRequest -Uri $url -OutFile $desktopPath
+}
